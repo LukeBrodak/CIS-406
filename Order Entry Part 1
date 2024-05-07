@@ -29,7 +29,7 @@ public class OrderEntryPhase1
 	
 	public String toString()
 	{
-		return ("\nOrder Detials:\n" +
+		return ("\nOrder Details:\n" +
 				"\nItem Number \tItem Description \tItem Price\n" +
 				"  " + itemNumber +
 				"  \t" + itemDescription +
