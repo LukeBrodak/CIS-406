@@ -1,0 +1,77 @@
+// Luke Brodak CIS 406 Course Project Phase 3 // 
+package orderEntryPhaseThree;
+
+import java.util.Scanner;
+
+public class OrderEntryPhaseThree {
+
+    private static double totalGrossAmount = 0.0;
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        char choice;
+        int totalEntries = 0;
+
+        do {
+            String itemNumber = promptString(scanner, "Enter item number: ");
+            String itemDescription = promptString(scanner, "Enter item description: ");
+            double itemPrice = promptDouble(scanner, "Enter the item price: ");
+            int quantityOrdered = promptInt(scanner, "Enter quantity ordered: ");
+
+            double grossAmount = itemPrice * quantityOrdered;
+            totalGrossAmount += grossAmount;
+            totalEntries++;
+
+            System.out.println("\nItem added: " + itemDescription + " - Item Number: " + itemNumber);
+            System.out.print("\nDo you want to enter another item? (y/n): ");
+            choice = scanner.next().charAt(0);
+            scanner.nextLine();
+            
+        } while (choice == 'y' || choice == 'Y');
+
+
+        double taxPercent = promptDouble(scanner, "Enter item tax: ");
+        double taxAmount = totalGrossAmount * taxPercent / 100;
+
+        double discountPercent = promptDouble(scanner, "Enter discount: ");
+        double discountAmount = totalGrossAmount * discountPercent / 100;
+
+        double netAmount = totalGrossAmount + taxAmount - discountAmount;
+
+
+        System.out.printf("%-20s\t%-20s\t%-20s\t%-20s\t%-20s\n", "Total Number of Items", "Total Gross Amount", "Total Tax Amount", "Total Discount Amount", "Net Amount");
+        System.out.printf("%-20s\t$%-19.2f\t$%-19.2f\t$%-19.2f\t$%-19.2f\n", totalEntries, totalGrossAmount, taxAmount, discountAmount, netAmount);
+
+        System.out.println("\nHave a nice day!");
+        scanner.close();
+    }
+
+    public static int promptInt(Scanner scanner, String prompt) {
+        System.out.print(prompt);
+        while (!scanner.hasNextInt()) {
+            System.out.println("Invalid input. Please enter a numeric value.");
+            scanner.next(); 
+            
+        }
+        int value = scanner.nextInt();
+        scanner.nextLine(); 
+        return value;
+    }
+
+    public static String promptString(Scanner scanner, String prompt) {
+        System.out.print(prompt);
+        return scanner.next(); 
+        
+    }
+
+    public static double promptDouble(Scanner scanner, String prompt) {
+        System.out.print(prompt);
+        while (!scanner.hasNextDouble()) {
+            System.out.println("Invalid input. Please enter a decimal value.");
+            scanner.next();
+        }
+        double value = scanner.nextDouble(); 
+        scanner.nextLine(); 
+        return value;
+    }
+}
