@@ -21,7 +21,7 @@ public class OrderEntryPhase4 {
         double[] netAmount = new double[MAX_ITEMS];
 
         String response = "?";
-        char continueChoice = 'y';
+        char moreItems = 'y';
         int itemCount = 0;
         double totalGrossAmount = 0;
         double totalTaxAmount = 0;
@@ -45,10 +45,11 @@ public class OrderEntryPhase4 {
         System.out.println();
 
         //Add items
-        while (continueChoice != 'n' && continueChoice != 'N')
+        while (moreItems != 'n' && moreItems != 'N')
         {
         	
-            try {
+            try 
+            {
                 System.out.print("Enter Item Number: ");
                 itemNumber[itemCount] = input.nextLine();
                 
@@ -89,7 +90,7 @@ public class OrderEntryPhase4 {
 
             //Check if user wants to add another item
             System.out.print("\nOrder more items? (y/n): ");
-            continueChoice = response.charAt(0);
+            moreItems = input.next().charAt(0);
             response = input.nextLine();
 
         }
