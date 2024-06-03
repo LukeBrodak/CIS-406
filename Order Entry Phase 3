@@ -140,13 +140,14 @@ public class OrderEntryPhase4 {
         }
 
         // Output totals
-        System.out.println("\nTotals:\t" +
-                           " " + itemCount + "\t\t" +
-                           "\t\t" +
-                           "\t\t" +
-                           "\t\t" +
-                           "\t\t" + totalTaxAmount + "\t\t" +
-                           "\t\t" + totalDiscAmount + "\t\t" +
-                           "\t\t" + totalNetAmount);
+            System.out.println("\nTotals\t\t" +
+                        "# items = " + itemCount + "\t\t" +
+                        "\t\t" +
+                        "\t" + totalGrossAmount + "\t\t" +
+                        "\t" +
+                        "$" + totalTaxAmount + "\t" +
+                        "\t" +
+                        "$" + totalDiscountAmount + "\t\t" +
+                        "$" + totalNetAmount);
     }
 }
