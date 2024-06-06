@@ -2,47 +2,94 @@ package vacationDiaryPart2;
 
 import java.util.Scanner;
 
-
 public class VacationDiaryPart2 {
+	
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
-        String response = "";
-        char continueChoice = 'y';
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder table = new StringBuilder();
+        String headers = "Date\t\tCity\t\tCountry\tDays\tMode\n========    ==========   ==========   =====   =====";
+        table.append(headers);
+        String border = "============================================================\n";
+        table.insert(0, border); // Insert border at the beginning of the table
+        table.append(border); // Append border at the end of the table
         
-		Scanner scanner = new Scanner(System.in); 
+        while (true) {
+            System.out.print("Enter date visit started (mmddyyyy) or 'End' to terminate the loop: ");
+            String dateInput = scanner.nextLine();
 
+            if ("End".equalsIgnoreCase(dateInput)) {
+                break;
+            }
+
+            String formattedDate = validateAndFormatDate(dateInput);
+            if (formattedDate == null) continue; // Re-prompt if validation fails
+
+            System.out.print("Enter the city visited: ");
+            String city = validateAndFormatCityCountry(scanner.nextLine(), true);
+
+            System.out.print("Enter the country visited: ");
+            String country = validateAndFormatCityCountry(scanner.nextLine(), false);
+
+            System.out.print("Enter the number of days: ");
+            int days = validateAndFormatDays(scanner.nextLine());
+            if (days == -1) continue; // Re-prompt if validation fails
+
+            System.out.print("Enter the mode of travel (car, plane, ship, train, bus): ");
+            String modeOfTravel = validateModeOfTravel(scanner.nextLine());
+            if (modeOfTravel == null) continue; // Re-prompt if validation fails
+
+            table.append(formattedDate).append("\t")
+                 .append(city).append("\t")
+                 .append(country).append("\t")
+                 .append(days).append("\t")
+                 .append(modeOfTravel).append("\n");
+        }
+
+        System.out.println("\n======================Vacation Diary======================\n" + table.toString());
+        scanner.close();
+    }
+
+    private static String validateAndFormatDate(String date) {
+        if (!date.matches("\\d{8}")) {
+            System.out.println("Invalid date format. Please enter as mmddyyyy.");
+            return null;
+        }
+        return date.substring(0, 2) + "/" + date.substring(2, 4) + "/"
++ date.substring(4);
+    }
+
+    private static int validateAndFormatDays(String daysInput) {
+        try {
+            int days = Integer.parseInt(daysInput);
+            if (days < 1 || days > 30) {
+                System.out.println("Number of days must be between 1 and 30.");
+                return -1;
+            }
+            return days;
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input for days. Please enter a numeric value.");
+            return -1;
+        }
+    }
+
+    private static String validateAndFormatCityCountry(String input, boolean isCity) {
+        if (input.length() > 15) {
+            return input.substring(0, 15);
+        } else {
+            return String.format("%-15s", input);
+        }
         
-        while (continueChoice != 'n' && continueChoice != 'N') {
-            try {
-			 
-		        System.out.print("Enter Date vacation started (mm/dd/yyyy): ");
-		        String startDate = scanner.nextLine();
-	
-		        System.out.print("Enter City Visited: ");
-		        String city = scanner.nextLine();
-	
-		        System.out.print("Enter Country Visited: ");
-		        String country = scanner.nextLine();
-	
-		        System.out.print("Enter number of days: ");
-		        int numberOfDays = scanner.nextInt();
-		        scanner.nextLine();  // consume the remaining newline
-	
-		        System.out.print("Enter Mode of Travel (car, airplane, ship, train, bus): ");
-		        String modeOfTravel = scanner.nextLine();
-	
-		        System.out.println("\nDetails of your trip:");
-		        System.out.println("Date: " + startDate);
-		        System.out.println("City: " + city);
-		        System.out.println("Country: " + country);
-		        System.out.println("Number of Days: " + numberOfDays);
-		        System.out.println("Travelled By: " + modeOfTravel);
-		        System.out.println("Bye!!!");
+}
 
-	        scanner.close();
-	    
-	
-	
-		
+    private static String validateModeOfTravel(String mode) {
+        String[] validModes = {"car", "plane", "ship", "train", "bus"};
+        for (String validMode : validModes) {
+            if (validMode.equalsIgnoreCase(mode)) {
+                return mode;
+            }
+        }
+        System.out.println("Invalid mode of travel. Please enter one of the following: car, plane, ship, train, bus.");
+        return null;
+        
+    }}
