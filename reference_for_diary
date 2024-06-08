@@ -1,131 +1,119 @@
-package vacationDiaryPart2;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
-public class VacationDiaryPart2 {
-
+public class VacationDiary {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        List<String[]> tableData = new ArrayList<>();
-        String[] headers = {"Date", "City", "Country", "Days", "Mode"};
-        int[] columnWidths = getColumnWidths(headers);
-
+        StringBuilder table = new StringBuilder();
+        
+        // Append the header to the table
+        table.append("======================================================================\n");
+        table.append("======================= Vacation Diary ==============================\n");
+        table.append("======================================================================\n");
+        table.append("Date\t\tCity\t\tCountry\t\tDays\tMode\n");
+        table.append("======================================================================\n");
+        
         while (true) {
-            System.out.print("Enter date visit started (mmddyyyy) or 'End' to terminate the loop: ");
-            String dateInput = scanner.nextLine();
-            if ("End".equalsIgnoreCase(dateInput)) {
+            System.out.print("Enter Date Vacation Started (mmddyyyy) or End to quit: ");
+            String dateStr = scanner.nextLine();
+            
+            if (dateStr.equalsIgnoreCase("End")) {
                 break;
             }
-            String formattedDate = validateAndFormatDate(dateInput);
-            if (formattedDate == null) continue; // Re-prompt if validation fails
-            System.out.print("Enter the city visited: ");
-            String city = validateAndFormatCityCountry(scanner.nextLine(), true);
-            System.out.print("Enter the country visited: ");
-            String country = validateAndFormatCityCountry(scanner.nextLine(), false);
-            System.out.print("Enter the number of days: ");
-            int days = validateAndFormatDays(scanner.nextLine());
-            if (days == -1) continue; // Re-prompt if validation fails
-            System.out.print("Enter the mode of travel (car, plane, ship, train, bus): ");
-            String modeOfTravel = validateModeOfTravel(scanner.nextLine());
-            if (modeOfTravel == null) continue; // Re-prompt if validation fails
-
-            String[] row = {formattedDate, city, country, String.valueOf(days), modeOfTravel};
-            tableData.add(row);
+            
+            // Validate date format
+            dateStr = validateDate(scanner, dateStr);
+            
+            System.out.print("Enter City Visited: ");
+            String city = formatString(scanner.nextLine(), 15);
+            
+            System.out.print("Enter Country Visited: ");
+            String country = formatString(scanner.nextLine(), 15);
+            
+            System.out.print("Enter number of days: ");
+            int days = validateNumberOfDays(scanner);
+            
+            System.out.print("Enter Mode of Travel (car, airplane, ship, train, bus): ");
+            String mode = validateModeOfTravel(scanner);
+            
+            // Append the data to the table
+            table.append(formatDate(dateStr)).append("\t").append(city).append("\t").append(country).append("\t").append(days).append("\t").append(mode).append("\n");
         }
-
-        printHeaderLine(columnWidths);
-        System.out.println("\n======================Vacation Diary======================");
-        printHeaders(headers, columnWidths);
-        printHeaderLine(columnWidths);
-
-        for (String[] row : tableData) {
-            printRow(row, columnWidths);
-        }
-
-        printHeaderLine(columnWidths);
-        scanner.close();
+        
+        // Append the closing line to the table
+        table.append("======================================================================\n");
+        
+        // Display the table
+        System.out.println(table);
     }
-
-    private static void printHeaderLine(int[] columnWidths) {
-        for (int width : columnWidths) {
-            for (int i = 0; i < width + 2; i++) {
-                System.out.print("=");
-            }
-            System.out.print("=");
+    
+    // Validation Functions
+    
+    private static String validateDate(Scanner scanner, String dateStr) {
+        while (!isValidDate(dateStr)) {
+            System.out.print("Invalid date format. Please enter the date as mmddyyyy: ");
+            dateStr = scanner.nextLine();
         }
-        System.out.println();
+        return dateStr;
     }
-
-    private static void printHeaders(String[] headers, int[] columnWidths) {
-        for (int i = 0; i < headers.length; i++) {
-            System.out.print("| " + headers[i]);
-            for (int j = 0; j < columnWidths[i] - headers[i].length(); j++) {
-                System.out.print(" ");
-            }
+    
+    private static boolean isValidDate(String dateStr) {
+        if (dateStr.length() != 8) {
+            return false;
         }
-        System.out.println("|");
-    }
-
-    private static void printRow(String[] row, int[] columnWidths) {
-        for (int i = 0; i < row.length; i++) {
-            System.out.print("| " + row[i]);
-            for (int j = 0; j < columnWidths[i] - row[i].length(); j++) {
-                System.out.print(" ");
+        
+        for (char c : dateStr.toCharArray()) {
+            if (!Character.isDigit(c)) {
+                return false;
             }
         }
-        System.out.println("|");
+        
+        return true;
     }
-
-    private static int[] getColumnWidths(String[] headers) {
-        int[] columnWidths = new int[headers.length];
-
-        for (int i = 0; i < headers.length; i++) {
-            columnWidths[i] = headers[i].length();
-        }
-
-        return columnWidths;
-    }
-
-    private static String validateAndFormatDate(String date) {
-        if (!date.matches("\\d{8}")) {
-            System.out.println("Invalid date format. Please enter as mmddyyyy.");
-            return null;
-        }
-        return date.substring(0, 2) + "/" + date.substring(2, 4) + "/" + date.substring(4);
-    }
-
-    private static int validateAndFormatDays(String daysInput) {
-        try {
-            int days = Integer.parseInt(daysInput);
-            if (days < 1 || days > 30) {
-                System.out.println("Number of days must be between 1 and 30.");
-                return -1;
+    
+    private static int validateNumberOfDays(Scanner scanner) {
+        int days;
+        
+        while (true) {
+            if (scanner.hasNextInt()) {
+                days = scanner.nextInt();
+                if (days >= 1 && days <= 30) {
+                    break;
+                }
+            } else {
+                scanner.next(); // Consume the invalid input
             }
-            return days;
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input for days. Please enter a numeric value.");
-            return -1;
+            System.out.print("Invalid number of days. Please enter a number between 1 and 30: ");
         }
+        
+        scanner.nextLine(); // Consume the newline character
+        return days;
     }
-
-    private static String validateAndFormatCityCountry(String input, boolean isCity) {
-        if (input.length() > 15) {
-            return input.substring(0, 15);
+    
+    private static String validateModeOfTravel(Scanner scanner) {
+        String mode;
+        
+        while (true) {
+            mode = scanner.nextLine().toLowerCase();
+            if (mode.equals("car") || mode.equals("airplane") || mode.equals("ship") || mode.equals("train") || mode.equals("bus")) {
+                break;
+            }
+            System.out.print("Invalid mode of travel. Please enter one of the following: car, airplane, ship, train, bus: ");
+        }
+        
+        return mode;
+    }
+    
+    // Other utility methods
+    
+    private static String formatString(String str, int length) {
+        if (str.length() < length) {
+            return String.format("%-" + length + "s", str);
         } else {
-            return String.format("%-15s", input);
+            return str.substring(0, length);
         }
     }
-
-    private static String validateModeOfTravel(String mode) {
-        String[] validModes = {"car", "plane", "ship", "train", "bus"};
-        for (String validMode : validModes) {
-            if (validMode.equalsIgnoreCase(mode)) {
-                return mode;
-            }
-        }
-        System.out.println("Invalid mode of travel. Please enter one of the following: car, plane, ship, train, bus.");
-        return null;
+    
+    private static String formatDate(String dateStr) {
+        return dateStr.substring(0, 2) + "/" + dateStr.substring(2, 4) + "/" + dateStr.substring(4);
     }
 }
