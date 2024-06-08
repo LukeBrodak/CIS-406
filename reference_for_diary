@@ -1,19 +1,16 @@
 package vacationDiaryPart2;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class VacationDiaryPart2 {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        StringBuilder table = new StringBuilder();
+        List<String[]> tableData = new ArrayList<>();
         String[] headers = {"Date", "City", "Country", "Days", "Mode"};
         int[] columnWidths = getColumnWidths(headers);
-
-        printHeaderLine(columnWidths);
-        System.out.println("\n======================Vacation Diary======================");
-        printHeaders(headers, columnWidths);
-        printHeaderLine(columnWidths);
 
         while (true) {
             System.out.print("Enter date visit started (mmddyyyy) or 'End' to terminate the loop: ");
@@ -35,6 +32,15 @@ public class VacationDiaryPart2 {
             if (modeOfTravel == null) continue; // Re-prompt if validation fails
 
             String[] row = {formattedDate, city, country, String.valueOf(days), modeOfTravel};
+            tableData.add(row);
+        }
+
+        printHeaderLine(columnWidths);
+        System.out.println("\n======================Vacation Diary======================");
+        printHeaders(headers, columnWidths);
+        printHeaderLine(columnWidths);
+
+        for (String[] row : tableData) {
             printRow(row, columnWidths);
         }
 
